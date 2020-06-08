@@ -1,0 +1,14 @@
+{
+    "log_level": "debug",
+    "baseurl": "https://my.incapsula.com",
+    "cwaf_auth": {
+      "api_id": "1234",
+      "api_key": "your-key-here",
+      "account_id": "5678"
+    },
+    "tlsList":[
+        "tls1",
+        "tls1_1",
+        "tls1_2"
+    ]
+}
