@@ -38,7 +38,7 @@ csv.close()
 
 def getSubAccounts():
     account_ids = []
-    params = auth.copy()
+    params = auth[:]
     account_response = cwaf.makeCall(CONFIG["baseurl"]+"/api/prov/v1/account", params, "POST")
     account = account_response.json()
     account_ids.append(account["account_id"])
