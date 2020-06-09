@@ -57,7 +57,7 @@ def getSubAccounts():
     return(account_ids)
 
 account_ids = getSubAccounts()
-hasSubAccounts = len(account_ids)==1 ? False : True
+# hasSubAccounts = len(account_ids)==1 ? False : True
 # for account_id in account_ids:
 # hasMoreSites = True
 page_num = 0
