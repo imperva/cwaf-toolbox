@@ -77,7 +77,9 @@ for account_id in account_ids:
                 for tlsProto in CONFIG["tlsList"]:
                     pipe = Popen(['openssl','s_client','-connect',site["domain"]+':443','-'+tlsProto], stdout=PIPE)
                     output = pipe.communicate()
-                    if str(output[0]).find("no peer certificate available")!=-1:
+                    if str(output[0]).find("errno"):
+                        record.append("n/a")
+                    elif str(output[0]).find("no peer certificate available")!=-1:
                         record.append("False")
                     else:
                         record.append("True")
