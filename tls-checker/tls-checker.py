@@ -57,44 +57,45 @@ def getSubAccounts():
     return(account_ids)
 
 account_ids = getSubAccounts()
-for account_id in account_ids:
-    hasMoreSites = True
-    page_num = 0
-    while hasMoreSites==True:
-        params = auth[:]
-        params.append("page_size=100")
-        params.append("page_num="+str(page_num))  
-        params.append("account_id="+str(account_id))  
-        get_sites_response = cwaf.makeCall(CONFIG["baseurl"]+"/api/prov/v1/sites/list", params, "POST")
-        sites_response = get_sites_response.json()
-        if len(sites_response["sites"])>0:
-            for site in sites_response["sites"]:
-                record = [
-                    str(account_id),
-                    str(site["site_id"]),
-                    str(site["domain"]),
-                    str(site["support_all_tls_versions"])
-                ]
-                pipe = Popen(['nslookup',site["domain"]], stdout=PIPE)
-                output = pipe.communicate()
-                if str(output[0]).lower().find("can't find")!=-1:
-                    record.append("n/a")
-                    record.append("n/a")
-                    record.append("n/a")
-                else:
-                    for tlsProto in CONFIG["tlsList"]:
-                        pipe = Popen(['openssl','s_client','-connect',site["domain"]+':443','-'+tlsProto], stdout=PIPE)
-                        output = pipe.communicate()
-                        if str(output[0]).find("errno")!=-1:
-                            record.append("n/a")
-                        elif str(output[0]).find("no peer certificate available")!=-1:
-                            record.append("False")
-                        else:
-                            record.append("True")
-                    
-                csv=open(CSV_NAME,"w+")
-                csv.write(",".join(record)+"\n")
-                csv.close()
-            page_num+=1
-        else:
-            hasMoreSites=False
+hasSubAccounts = len(account_ids)==1 ? False : True
+# for account_id in account_ids:
+# hasMoreSites = True
+page_num = 0
+while hasMoreSites==True:
+    params = auth[:]
+    params.append("page_size=100")
+    params.append("page_num="+str(page_num))  
+    params.append("account_id="+str(account_id))  
+    get_sites_response = cwaf.makeCall(CONFIG["baseurl"]+"/api/prov/v1/sites/list", params, "POST")
+    sites_response = get_sites_response.json()
+    if len(sites_response["sites"])>0:
+        for site in sites_response["sites"]:
+            record = [
+                str(site["account_id"]),
+                str(site["site_id"]),
+                str(site["domain"]),
+                str(site["support_all_tls_versions"])
+            ]
+            pipe = Popen(['nslookup',site["domain"]], stdout=PIPE)
+            output = pipe.communicate()
+            if str(output[0]).lower().find("can't find")!=-1:
+                record.append("n/a")
+                record.append("n/a")
+                record.append("n/a")
+            else:
+                for tlsProto in CONFIG["tlsList"]:
+                    pipe = Popen(['openssl','s_client','-connect',site["domain"]+':443','-'+tlsProto], stdout=PIPE)
+                    output = pipe.communicate()
+                    if str(output[0]).find("errno")!=-1:
+                        record.append("n/a")
+                    elif str(output[0]).find("no peer certificate available")!=-1:
+                        record.append("False")
+                    else:
+                        record.append("True")
+                
+            csv=open(CSV_NAME,"w+")
+            csv.write(",".join(record)+"\n")
+            csv.close()
+        page_num+=1
+    else:
+        hasMoreSites=False
