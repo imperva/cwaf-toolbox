@@ -61,7 +61,7 @@ for account_id in account_ids:
     hasMoreSites = True
     page_num = 0
     while hasMoreSites==True:
-        params = auth.copy()
+        params = auth[:]
         params.append("page_size=100")
         params.append("page_num="+str(page_num))    
         get_sites_response = cwaf.makeCall(CONFIG["baseurl"]+"/api/prov/v1/sites/list", params, "POST")
