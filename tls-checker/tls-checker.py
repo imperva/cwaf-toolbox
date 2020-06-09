@@ -76,7 +76,7 @@ for account_id in account_ids:
                 ]
                 pipe = Popen(['nslookup',site["domain"]], stdout=PIPE)
                 output = pipe.communicate()
-                if str(output[0]).find("server can't find"):
+                if str(output[0]).lower().find("can't find")!=-1:
                     record.append("n/a")
                     record.append("n/a")
                     record.append("n/a")
@@ -93,7 +93,7 @@ for account_id in account_ids:
                     
                 csv=open(CSV_NAME,"w+")
                 csv.write(",".join(record)+"\n")
-                csv.close()            
+                csv.close()
             page_num+=1
         else:
             hasMoreSites=False
