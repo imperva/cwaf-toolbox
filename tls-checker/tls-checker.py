@@ -74,14 +74,14 @@ for account_id in account_ids:
                     str(site["domain"]),
                     str(site["support_all_tls_versions"])
                 ]
-                for tlsProto in CONFIG["tlsList"]:
-                    pipe = Popen(['nslookup',site["domain"]], stdout=PIPE)
-                    output = pipe.communicate()
-                    if str(output[0]).find("server can't find"):
-                        record.append("n/a")
-                        record.append("n/a")
-                        record.append("n/a")
-                    else:
+                pipe = Popen(['nslookup',site["domain"]], stdout=PIPE)
+                output = pipe.communicate()
+                if str(output[0]).find("server can't find"):
+                    record.append("n/a")
+                    record.append("n/a")
+                    record.append("n/a")
+                else:
+                    for tlsProto in CONFIG["tlsList"]:
                         pipe = Popen(['openssl','s_client','-connect',site["domain"]+':443','-'+tlsProto], stdout=PIPE)
                         output = pipe.communicate()
                         if str(output[0]).find("errno"):
