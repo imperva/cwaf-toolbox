@@ -1,0 +1,6 @@
+secret_store_name = ""
+site_id = [""]
+account_id = ""
+bucket_name = ""
+api_key = ""
+api_id = ""
