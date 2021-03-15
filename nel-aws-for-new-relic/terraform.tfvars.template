@@ -1,3 +1,4 @@
+aws_region = ""
 secret_store_name = ""
 site_id = [""]
 account_id = ""
