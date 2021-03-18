@@ -15,7 +15,7 @@ This project deploys [Network Error Logging (NEL)](https://www.w3.org/TR/network
 
     `aws_region` - _(required)_ the aws region to deploy in, example: `us-east-2`
 
-    `secret_store_name` - _(required)_ the name of the secret store, examnple: `/NewRelic/Dev`
+    `secret_store_name` - _(required)_ the name of the secret store, example: `/NewRelic/Dev`
 
     `site_id` - _(required)_ an array of Cloud WAF site ids to deploy NEL on, example: `["12345","67890"]`
 
@@ -25,9 +25,9 @@ This project deploys [Network Error Logging (NEL)](https://www.w3.org/TR/network
 
     `bucket_name` - _(required)_ the globally unique name of your S3 bucket in AWS, example: "your-unique-domain.here.com"
 
-    `api_id` - _(required)_ the Cloud WAF api user api id, exanple: `12345`
+    `api_id` - _(required)_ the Cloud WAF api user api id, example: `12345`
 
-    `api_key` - _(required)_ the Cloud WAF api user secret key, exanple: `AbCdE-12345-defgh-67890`
+    `api_key` - _(required)_ the Cloud WAF api user secret key, example: `AbCdE-12345-defgh-67890`
 
 ## Deploying the environment
 - In the `nel-aws-for-new-relic` folder, run the following commands to initialize and deploy:  
