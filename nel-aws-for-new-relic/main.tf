@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-2"
+  region = var.aws_region
 }
 
 provider "incapsula" {
@@ -17,7 +17,7 @@ resource "aws_lambda_permission" "NEL" {
 
 resource "aws_lambda_function" "NEL_Handler" {
     filename = "${path.cwd}/index.py.zip"
-    function_name                  = "NEL_Handler"
+    function_name                  = "${var.aws_resource_prefix}-NEL_Handler"
     handler                        = "index.lambda_handler"
     layers                         = []
     memory_size                    = 128
@@ -61,7 +61,7 @@ resource "aws_iam_role" "NEL_Role" {
     force_detach_policies = false
     managed_policy_arns   = []
     max_session_duration  = 3600
-    name                  = "NELRole-TF"
+    name                  = "${var.aws_resource_prefix}-NELRole-TF"
     path                  = "/"
     tags                  = {}
 
@@ -147,13 +147,13 @@ resource "aws_iam_role" "NEL_Firehose" {
         aws_iam_policy.NEL_NR_Firehouse.arn
     ]
     max_session_duration  = 3600
-    name                  = "NEL_NR_Delivery-TF"
+    name                  = "${var.aws_resource_prefix}-NEL_NR_Delivery-TF"
     path                  = "/service-role/"
     tags                  = {}
 }
 
 resource "aws_iam_policy" "NEL_NR_Firehouse" {
-    name   = "NEL_NR_Delivery_Policy"
+    name   = "${var.aws_resource_prefix}-NEL_NR_Delivery_Policy"
     path   = "/service-role/"
     policy = jsonencode(
         {
@@ -196,7 +196,7 @@ resource "aws_api_gateway_rest_api" "NEL" {
     binary_media_types           = []
     disable_execute_api_endpoint = false
     minimum_compression_size     = -1
-    name                         = "NEL"
+    name                         = "${var.aws_resource_prefix}-NEL"
     tags                         = {}
 
     endpoint_configuration {
@@ -265,7 +265,7 @@ resource "aws_api_gateway_stage" "Stage" {
 }
 
 resource "aws_api_gateway_deployment" "default" {
-    depends_on = [aws_api_gateway_method.ANY, aws_api_gateway_rest_api.NEL]
+    depends_on = [aws_api_gateway_method.ANY, aws_api_gateway_rest_api.NEL, aws_api_gateway_integration.LAMBDA_PROXY]
     rest_api_id = aws_api_gateway_rest_api.NEL.id
 }
 
@@ -279,7 +279,7 @@ data "aws_secretsmanager_secret_version" "NEL_Secret" {
 
 resource "aws_kinesis_stream" "NEL_Receiver" {
     encryption_type  = "NONE"
-    name             = "NEL_Receiver"
+    name             = "${var.aws_resource_prefix}-NEL_Receiver"
     retention_period = 24
     shard_count      = 5
     tags             = {}
@@ -289,7 +289,7 @@ resource "aws_kinesis_stream" "NEL_Receiver" {
 
 resource "aws_kinesis_firehose_delivery_stream" "NEL_NR_Delivery" {
     destination    = "http_endpoint"
-    name           = "NEL_NR_Delivery"
+    name           = "${var.aws_resource_prefix}-NEL_NR_Delivery"
     tags           = {}
     version_id     = "1"
 

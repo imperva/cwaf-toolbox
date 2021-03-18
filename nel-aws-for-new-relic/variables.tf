@@ -1,3 +1,5 @@
+variable "aws_region" {}
+variable "aws_resource_prefix" {}
 variable "secret_store_name" {}
 variable "site_id" {
   type = list(string)
