@@ -368,6 +368,6 @@ resource "incapsula_incap_rule" "NEL_Report-To_Header" {
     name          = "Report_To_NEL_Header"
     rewrite_name  = "Report-To"
     site_id       = var.site_id[count.index]
-    to            = "{\"group\": \"default\", \"max_age\": 3600, \"endpoints\": [{\"url\": \"${aws_api_gateway_stage.Stage.invoke_url}/nel?asn=$asn&account_id=$account_id&city=$city&country=$country&postalcode=$postalcode&state=$state&epoch=$epoch&longitude=$longitude&latitude=$latitude&site_id=$site_id&proxy_id=$proxy_id&pop=$pop&origin_pop=$origin_pop&session_id=$session_id&request_id=$request_id\"}], \"include_subdomains\": true}"
+    to            = "{\"group\": \"default\", \"max_age\": 3600, \"endpoints\": [{\"url\": \"${aws_api_gateway_stage.Stage.invoke_url}/nel?account_id=$account_id&city=$city&country=$country&postalcode=$postalcode&state=$state&epoch=$epoch&longitude=$longitude&latitude=$latitude&site_id=$site_id&proxy_id=$proxy_id&pop=$pop&origin_pop=$origin_pop&session_id=$session_id&request_id=$request_id&asn=$asn\"}], \"include_subdomains\": true}"
     filter = ""
 }
