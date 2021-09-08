@@ -2,6 +2,7 @@ provider "aws" {
   region = var.aws_region
 }
 
+// Do not modify, provider must remain as is regardless of region you are deploying in
 provider "aws" {
     alias = "east-1"
     region = "us-east-1"
