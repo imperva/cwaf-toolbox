@@ -46,14 +46,9 @@ resource "aws_lambda_function" "NEL_Handler" {
     runtime                        = "python3.8"
     timeout                        = 60
     source_code_hash = filebase64sha256("${path.module}/index.py.zip")
-//    layers = ["arn:aws:lambda:us-east-2:788065398147:layer:ImpervaRASPLambdaPython38:13"]
     environment {
         variables = {
             "StreamName" = aws_kinesis_stream.NEL_Receiver.name
-//            "IMPERVA_RASP_API_KEY"              = "71b84d94-5bcf-4abc-b3da-381102df8fbf"
-//            "IMPERVA_RASP_CONFIG_PATH"          = "/tmp/rasp_config.json"
-//            "IMPERVA_RASP_SECRET_KEY"           = "FK+b1wGVdK1CRnuQWg2eVg=="
-
         }
     }
 
