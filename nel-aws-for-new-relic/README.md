@@ -29,6 +29,37 @@ This project deploys [Network Error Logging (NEL)](https://www.w3.org/TR/network
 
     `api_key` - _(required)_ the Cloud WAF api user secret key, example: `AbCdE-12345-defgh-67890`
 
+    `naked_domain` - _(required)_ the naked domain that you own and manage in AWS Route53, example: `companyname.com`
+
+    `sub_domain` - _(optional)_ the sub-domain that will prepend the naked domain, example: `nel`
+
+    `report_to_params` - _(optional)_ the possible variables in the "Report_To" header, example: `account_id=$account_id&city=$city&country=$country&postalcode=$postalcode&state=$state`
+
+    `log_type` - _(optional)_ the log type sent to NewRelic for easier searching, example: `nel`
+
+    `max_age` - _(optional)_ the lifetime of the policy, in seconds (in a similar way to e.g. HSTS policies are time-restricted). The referenced reporting group should have a lifetime at least as long as the NEL policy., example: `3600`
+
+    `success_fraction` - _(optional)_ the floating point value between 0 and 1 which specifies the proportion of successful network requests to report., example: `0.1`
+
+    `failure_fraction` - _(optional)_ the floating point value between 0 and 1 which specifies the proportion of failed network requests to report. , example: `1.0`
+
+# Below variables are used to create a LetsEncrypt certificate.
+- Optional if using ACME and LetsEncrypt to create certificate.
+
+    `reg_email` - _(required)_ the contact email address for the account., example: `your@email.com`
+
+    `subject_organization` - _(required)_ the Company Name, example: `Your Company Name`
+
+    `subject_organizational_unit` - _(required)_ the organization you work in, example: `IT`
+
+    `subject_country` - _(required)_ the two-letter country code of company, example: `US`
+
+    `subject_postal_code` - _(required)_ the postal code of company, example: `111111`
+
+    `locality` - _(required)_ the city of company, example: `Hometown`
+
+    `serial_number` - _(required)_ the addition of this serial number allows for simple rotation ever 90 days, example: `1`
+
 ## Deploying the environment
 - In the `nel-aws-for-new-relic` folder, run the following commands to initialize and deploy:  
     - `terraform init`
