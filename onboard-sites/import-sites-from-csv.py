@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import os
 import sys
 import csv
@@ -9,6 +10,7 @@ from subprocess import PIPE,Popen
 ############ ENV Settings ############
 logging.basicConfig(filename="import-sites-from-csv.log", filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
+BLOCK_RULES = "sql_injection","cross_site_scripting","illegal_resource_access","remote_file_inclusion"
 CSV_DATA = ["Domain,Status,Account ID,Site ID,CNAME"]
 try:
     CSV_FILE_PATH = sys.argv[1]
@@ -27,6 +29,7 @@ def run():
         for row in csv_rows:
             processed_row = ['N/A'] * 5
             processed_row[0] = row[0]
+            print("Adding site for domain '"+row[0]+"'")
             result = os.popen('incap site add '+row[0])
             for attr in result.read().split("\n"):
                 # if "ERROR" in attr[:5]:
@@ -41,7 +44,13 @@ def run():
                 elif "The current CNAME Record for " in attr:
                     processed_row[4] = attr.split(" is ").pop()
             CSV_DATA.append(','.join(processed_row))
+            for rule_type in BLOCK_RULES:
+                if processed_row[3] != "N/A":
+                    result = os.popen('incap site security --security_rule_action=block_request '+rule_type+' '+processed_row[3])
+                    print(result.read())
+    
         csv_file.write("\n".join(CSV_DATA))
         csv_file.close()
+        
 if __name__ == '__main__':
     run()
