@@ -11,7 +11,7 @@ from subprocess import PIPE,Popen
 logging.basicConfig(filename="import-sites-from-csv.log", filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 BLOCK_RULES = ["sql_injection","cross_site_scripting","illegal_resource_access","remote_file_inclusion"]
-CSV_DATA = ["Domain,Status,Account ID,Site ID,CNAME,sql_injection,cross_site_scripting,illegal_resource_access,remote_file_inclusion"]
+CSV_DATA = ["Domain,Account ID,Status,Site ID,CNAME,sql_injection,cross_site_scripting,illegal_resource_access,remote_file_inclusion"]
 try:
     CSV_FILE_PATH = sys.argv[1]
 except:
@@ -25,17 +25,23 @@ csv_file=open(PROCESSED_CSV_FILE_NAME,"w+")
 def run():
     with open(CSV_FILE_PATH, newline='') as csvfile:
         csv_rows = csv.reader(csvfile, delimiter=',', quotechar='"')
-        # next(csv_rows)
+        next(csv_rows)
         for row in csv_rows:
             if len(row[0])>0:
                 processed_row = ['N/A'] * 9
                 processed_row[0] = row[0]
-                print("Adding site for domain '"+row[0]+"'")
-                result = os.popen('incap site add '+row[0])
+                if len(row)>1:
+                    processed_row[1] = row[1]
+                if len(row)>1 and row[1]!="N/A":
+                    print("Adding site for domain '"+row[0]+"' account_id '"+row[1]+"'")
+                    result = os.popen('incap site add --account_id='+row[1]+' '+row[0])
+                else:
+                    print("Adding site for domain '"+row[0]+"'")
+                    result = os.popen('incap site add '+row[0])
                 for attr in result.read().split("\n"):
-                    if "Site status:" in attr:
+                    if "Account ID:" in attr:
                         processed_row[1] = attr.split(": ").pop()
-                    elif "Account ID:" in attr:
+                    elif "Site status:" in attr:
                         processed_row[2] = attr.split(": ").pop()
                     elif "Site ID:" in attr:
                         processed_row[3] = attr.split(": ").pop()
